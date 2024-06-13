@@ -28,7 +28,6 @@ public class parcoursTab implements Iterable<Grillev2>,Iterator<Grillev2>
         }
         else
         {
-
             return false;
         }
     }

@@ -153,13 +153,21 @@ public class TraitRegle {
         Neighbors voisinage;
 
         switch (voisinageToken) {
-            case "G8":
-                voisinage = new G8(cellule, grille);
-                break;
             case "G0":
                 voisinage = new G0(cellule, grille);
                 break;
-
+            case "G2":
+                voisinage = new G2(cellule, grille);
+                break;
+            case "G4":
+                voisinage = new G4(cellule, grille);
+                break;
+            case "G8":
+                voisinage = new G8(cellule, grille);
+                break;
+            case "G26":
+                voisinage = new G26(cellule, grille);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown neighborhood type: " + voisinageToken);
         }

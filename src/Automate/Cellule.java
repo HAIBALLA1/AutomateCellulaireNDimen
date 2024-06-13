@@ -21,7 +21,7 @@ public class Cellule extends Grillev2 {
     }
 
     public int evaluer() {
-        return isStatus() ;
+        return getStatus() ;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class Cellule extends Grillev2 {
         return "Cellule{" + "status=" + status + ", coordonnees=" + coordonnees + '}';
     }
 
-    public int isStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -48,18 +48,6 @@ public class Cellule extends Grillev2 {
 
     public ArrayList<Integer> getCoordonnees() {
         return coordonnees;
-    }
-
-    public boolean equals_coord(ArrayList<Integer> coord) {
-        if (coord == null || this.coordonnees.size() != coord.size()) {
-            return false;
-        }
-        for (int i = 0; i < coord.size(); i++) {
-            if (!this.coordonnees.get(i).equals(coord.get(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public void setEtat(int status) {

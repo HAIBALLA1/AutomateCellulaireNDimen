@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TableauDynamiqueND extends Grillev2 implements Iterable{
-    private static final int MAX_DIM = 20;
-    public ArrayList<Grillev2> tab_dynamique; // Changé en protected pour l'accessibilité
+    //private static final int MAX_DIM = 20;
+    public ArrayList<Grillev2> tab_dynamique;
     public int level;
 
     public TableauDynamiqueND(ArrayList<Integer> dimension) throws Exception1 {
@@ -15,10 +15,6 @@ public class TableauDynamiqueND extends Grillev2 implements Iterable{
         this.level = taille_tab.size();
         this.dimension = taille_tab;
         tab_dynamique = new ArrayList<>(taille_tab.get(0));
-
-        if (taille_tab.size() > MAX_DIM) {
-            throw new IndexOutOfBoundsException("Tableau DynamiqueND excède la taille maximale");
-        }
 
         if (d == 1) {
             initializeCells(taille_tab.get(0));
@@ -76,8 +72,7 @@ public class TableauDynamiqueND extends Grillev2 implements Iterable{
                 c.setCoordonnees(new ArrayList<>(coord));// On associe à la cellule une copie d'une arrayList de coord (De la même manière que le constructeur
                 i++;
                 coord.set(coord.size()-1,i);
-                //Recup la cellule et on lui fixe son tab de coord via setCoord
-                //On incrémente la dernière case de 1
+
             }
         }
         else
@@ -99,43 +94,28 @@ public class TableauDynamiqueND extends Grillev2 implements Iterable{
         }
     }
 
-    public Cellule getCellule(Grillev2 grille, ArrayList<Integer> coordinates) {
-        Iterator<Grillev2> iter = ((TableauDynamiqueND) grille).iterator();
-        if (grille.getLevel() == 1) {
-            while (iter.hasNext()) {
-                Cellule c = (Cellule) iter.next();
-                if (c.equals_coord(coordinates)) {
-                    return c;
-                }
-            }
-            return null;
-        } else {
-            int i = 0;
-            while (iter.hasNext()) {
-                Grillev2 sub_tab = ((TableauDynamiqueND) grille).tab_dynamique.get(i);
-                Cellule c = getCellule(sub_tab, coordinates);
-                if (c != null) {
-                    return c;
-                }
-                i++;
-                if (!((parcoursTab) iter).increment()) {
-                    break;
-                }
-            }
-            return null;
-        }
-    }
+
 
     public Cellule getCellulev2(ArrayList<Integer> coordinates) {
         int position = coordinates.get(0);
         if (coordinates.size() == 1) {
+            // Return the cell directly if it's the final level
             return (Cellule) tab_dynamique.get(position);
         }
         ArrayList<Integer> copy = new ArrayList<>(coordinates);
         copy.remove(0);
-        TableauDynamiqueND sub_tab = (TableauDynamiqueND) tab_dynamique.get(position);
-        return sub_tab.getCellulev2(copy);
+        Grillev2 sub_tab = tab_dynamique.get(position);
+        if (sub_tab instanceof TableauDynamiqueND) {
+
+            return ((TableauDynamiqueND) sub_tab).getCellulev2(copy);
+        } else if (sub_tab instanceof Cellule) {
+
+            return (Cellule) sub_tab;
+        } else {
+            throw new ClassCastException("Expected TableauDynamiqueND or Cellule but found " + sub_tab.getClass().getSimpleName());
+        }
     }
+
 
     public void DFS() {
         DFS_search_example(this);

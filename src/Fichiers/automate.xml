@@ -1,0 +1,19 @@
+<automate>
+    <Dimensionalite>2D</Dimensionalite>
+    <Taille>
+        <dimension>80</dimension>
+        <dimension>60</dimension>
+    </Taille>
+    <Regle>
+        SI(OU(EQ(COMPTER(G8),3), ET(EQ(COMPTER(G8),2), EQ(COMPTER(G0),1))),1,0)
+    </Regle>
+    <EtatInitial>RANDOM(15)</EtatInitial>
+    <!-- Initialisation aléatoire avec 15% de chance d'être 1 (allumé) -->
+    <Voisinages>
+        <Voisinage>G0</Voisinage>
+        <Voisinage>G6</Voisinage>
+        <Voisinage>G8</Voisinage>
+        <Voisinage>G4</Voisinage>
+        <Voisinage>G24</Voisinage>
+    </Voisinages>
+</automate>

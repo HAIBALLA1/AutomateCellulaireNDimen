@@ -1,44 +1,63 @@
-import projectException.Exception1;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import Voisinages.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.*;
 import Automate.*;
 import InterfaceGraphique.*;
 import Arbre.TraitRegle;
 
 public class Testmain {
-    public static void main(String[] args) throws Exception1, InvalidNeighborException {
-        // Définition des dimensions pour la grille
-        ArrayList<Integer> dim = new ArrayList<>(Arrays.asList(40, 30));
+    public static void main(String[] args) throws Exception {
+        // Lire le fichier XML
+        File inputFile = new File("/home/ing/Bureau/myProject/src/Fichiers/automate.xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(inputFile);
+        doc.getDocumentElement().normalize();
+
+        // Lire les dimensions
+        NodeList dimensionList = doc.getElementsByTagName("dimension");
+        ArrayList<Integer> dimensions = new ArrayList<>();
+        for (int i = 0; i < dimensionList.getLength(); i++) {
+            dimensions.add(Integer.parseInt(dimensionList.item(i).getTextContent()));
+        }
+        System.out.println(dimensions);
+        // Lire la règle
+        String regle = doc.getElementsByTagName("Regle").item(0).getTextContent().trim();
+
+        // Lire l'état initial
+        String etatInitial = doc.getElementsByTagName("EtatInitial").item(0).getTextContent().trim();
+
+        // Lire les voisinages
+        NodeList voisinageList = doc.getElementsByTagName("Voisinage");
+        ArrayList<String> voisinages = new ArrayList<>();
+        for (int i = 0; i < voisinageList.getLength(); i++) {
+            voisinages.add(voisinageList.item(i).getTextContent().trim());
+        }
 
         // Création de la grille dynamique multidimensionnelle
-        TableauDynamiqueND tab = new TableauDynamiqueND(dim);
-
-        // Initialisation des coordonnées
+        TableauDynamiqueND tab = new TableauDynamiqueND(dimensions);
         tab.set_coord(tab);
 
         // Initialisation de ColorGrid
-        int taillecase = 40;
-        int largeur = 30; // Largeur de la grille
-        int hauteur = 40; // Hauteur de la grille
-        ColorGrid.initialiser(taillecase, largeur, hauteur);
+        int taillecase = 20;
+        ColorGrid.initialiser(taillecase, dimensions.get(1), dimensions.get(0));
 
-        // Initialiser certaines cellules comme vivantes (1) pour observer les changements
-        initialiserGrille(tab);
-
-        // Définir une règle qui provoque des changements intéressants
-        String regle = "SI(OU(EQ(COMPTER(G8), 2), EQ(COMPTER(G0), 3)), 1, 0)";
+        // Initialiser les cellules de la grille selon l'état initial
+        initialiserGrille(tab, etatInitial, dimensions);
 
         TraitRegle traitRegle = new TraitRegle();
 
-        int cycles = 500; // Nombre de cycles à exécuter
+        int cycles = 200; // Nombre de cycles à exécuter
         for (int cycle = 0; cycle < cycles; cycle++) {
             System.out.println("Cycle " + cycle);
 
             // Parcourir toutes les cellules du tableau 2D
-            for (int i = 0; i < hauteur; i++) {
-                for (int j = 0; j < largeur; j++) {
+            for (int i = 0; i < dimensions.get(0); i++) {
+                for (int j = 0; j < dimensions.get(1); j++) {
                     // Définition des coordonnées pour récupérer une cellule
                     ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i, j));
 
@@ -58,7 +77,7 @@ public class Testmain {
                     System.out.println("Résultat de la règle pour la cellule (" + i + ", " + j + ") : " + result);
 
                     // Mettre à jour la couleur de la cellule en fonction du résultat
-                    Color newColor = result == 1 ? Color.WHITE : Color.BLACK;
+                    Color newColor = result == 1 ? Color.BLUE : Color.WHITE;
                     ColorGrid.setCellColor(i, j, newColor, cycle);
 
                     // Mettre à jour l'état de la cellule en fonction du résultat
@@ -77,12 +96,18 @@ public class Testmain {
         ColorGrid.stop();
     }
 
-    private static void initialiserGrille(TableauDynamiqueND tab) {
-        // Initialiser certaines cellules comme vivantes (1) pour observer les changements
-        tab.getCellulev2(new ArrayList<>(Arrays.asList(1, 1))).setEtat(1);
-        tab.getCellulev2(new ArrayList<>(Arrays.asList(1, 2))).setEtat(1);
-        tab.getCellulev2(new ArrayList<>(Arrays.asList(1, 3))).setEtat(1);
-        tab.getCellulev2(new ArrayList<>(Arrays.asList(2, 2))).setEtat(1);
-        tab.getCellulev2(new ArrayList<>(Arrays.asList(3, 3))).setEtat(1);
+    private static void initialiserGrille(TableauDynamiqueND tab, String etatInitial, ArrayList<Integer> dimensions) {
+        if (etatInitial.startsWith("RANDOM")) {
+            int pourcentage = Integer.parseInt(etatInitial.replaceAll("[^0-9]", ""));
+            for (int i = 0; i < dimensions.get(0); i++) {
+                for (int j = 0; j < dimensions.get(1); j++) {
+                    if (Math.random() * 100 < pourcentage) {
+                        tab.getCellulev2(new ArrayList<>(Arrays.asList(i, j))).setEtat(1);
+                    } else {
+                        tab.getCellulev2(new ArrayList<>(Arrays.asList(i, j))).setEtat(0);
+                    }
+                }
+            }
+        }
     }
 }
