@@ -1,3 +1,7 @@
+package Voisinages;
+import Automate.* ;
+import  operateurs.*;
+
 public class G4 extends Neighbors {
     public G4(Cellule cellule, Grillev2 grille) {
         super(cellule, 2, new int[][]{
@@ -5,8 +9,4 @@ public class G4 extends Neighbors {
         }, grille);
     }
 
-    @Override
-    public int evaluer() {
-        return 0;
-    }
 }

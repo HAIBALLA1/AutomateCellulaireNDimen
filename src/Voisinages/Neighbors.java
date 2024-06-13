@@ -1,7 +1,9 @@
+package Voisinages;
+import Automate.* ;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public abstract class Neighbors extends Node {
+public abstract class Neighbors  {
     protected Cellule G0;
     protected ArrayList<Cellule> neighbors;
     protected ArrayList<ArrayList<Integer>> neighbors_coordinates;
@@ -86,6 +88,5 @@ public abstract class Neighbors extends Node {
         neighbors.remove(G0);
     }
 
-    @Override
-    public abstract int evaluer();
+
 }

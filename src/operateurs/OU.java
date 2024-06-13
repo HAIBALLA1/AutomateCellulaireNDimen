@@ -1,21 +1,12 @@
-public class OU extends Node {
-    private Node val1;
-    private Node val2;
+package operateurs;
 
-    public OU() {}
-
-    public OU(Node val1, Node val2) {
-        this.val1 = val1;
-        this.val2 = val2;
+public class OU extends RegleGen {
+    public OU(int val1, int val2) {
+        super(val1, val2);
     }
-
-    public Node getVal1() { return val1; }
-    public void setVal1(Node val1) { this.val1 = val1; }
-    public Node getVal2() { return val2; }
-    public void setVal2(Node val2) { this.val2 = val2; }
 
     @Override
     public int evaluer() {
-        return val1.evaluer() != 0 || val2.evaluer() != 0 ? 1 : 0;
+        return val1 | val2;
     }
 }

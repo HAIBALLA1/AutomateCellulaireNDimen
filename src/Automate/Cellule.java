@@ -1,25 +1,27 @@
+package Automate;
+
 import java.util.ArrayList;
 
 public class Cellule extends Grillev2 {
-    private boolean status;
+    private int status;
     private static int compteur;
     protected ArrayList<Integer> coordonnees;
 
     public Cellule() {
-        this.status = false;
+        this.status = 0;
         this.taille = 1;
         this.coordonnees = new ArrayList<>(); // Initialisation des coordonnées
         compteur++;
     }
 
-    public Cellule(boolean status) {
+    public Cellule(int status) {
         this.status = status;
         this.coordonnees = new ArrayList<>(); // Initialisation des coordonnées
         compteur++;
     }
 
     public int evaluer() {
-        return isStatus() ? 1 : 0;
+        return isStatus() ;
     }
 
     @Override
@@ -27,7 +29,7 @@ public class Cellule extends Grillev2 {
         return "Cellule{" + "status=" + status + ", coordonnees=" + coordonnees + '}';
     }
 
-    public boolean isStatus() {
+    public int isStatus() {
         return status;
     }
 
@@ -58,5 +60,9 @@ public class Cellule extends Grillev2 {
             }
         }
         return true;
+    }
+
+    public void setEtat(int status) {
+        this.status = status;
     }
 }

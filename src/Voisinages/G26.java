@@ -1,3 +1,7 @@
+package Voisinages;
+import Automate.* ;
+import  operateurs.*;
+
 public class G26 extends Neighbors {
     public G26(Cellule G0, Grillev2 grille) {
         super(G0, 3, generateG26Rules(), grille);
@@ -21,9 +25,5 @@ public class G26 extends Neighbors {
         return rules;
     }
 
-    @Override
-    public int evaluer() {
-        System.out.println("Je suis passé par là ");
-        return 0; // Implement as per the requirement
-    }
+
 }

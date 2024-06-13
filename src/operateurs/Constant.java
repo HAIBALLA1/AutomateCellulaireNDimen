@@ -1,7 +1,10 @@
-public class Constant extends Node {
+package operateurs;
+
+public class Constant extends RegleGen {
     private final int value;
 
     public Constant(int value) {
+
         this.value = value;
     }
 

@@ -1,16 +1,16 @@
+package Automate ;
 import projectException.Exception1;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TableauDynamiqueND extends Grillev2 implements Iterable{
     private static final int MAX_DIM = 20;
-    protected ArrayList<Grillev2> tab_dynamique; // Changé en protected pour l'accessibilité
+    public ArrayList<Grillev2> tab_dynamique; // Changé en protected pour l'accessibilité
     public int level;
 
     public TableauDynamiqueND(ArrayList<Integer> dimension) throws Exception1 {
         this(dimension.size(), dimension);
     }
-
     private TableauDynamiqueND(int d, ArrayList<Integer> taille_tab) throws Exception1 {
         this.level = taille_tab.size();
         this.dimension = taille_tab;
@@ -30,7 +30,7 @@ public class TableauDynamiqueND extends Grillev2 implements Iterable{
     private void initializeCells(int size) {
         this.taille = size;
         for (int i = 0; i < taille; i++) {
-            boolean status = Math.random() < 0.5;
+            int status = (Math.random() < 0.5) ? 0 : 1; // Initialisation aléatoire avec 0 ou 1
             Cellule c = new Cellule(status);
             tab_dynamique.add(c);
         }

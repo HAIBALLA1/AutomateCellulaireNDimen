@@ -1,21 +1,24 @@
-public class ADD extends Node {
-    private Node val1;
-    private Node val2;
+package operateurs;
+import Arbre.*;
 
-    public ADD() {}
+public class ADD extends RegleGen {
 
-    public ADD(Node val1, Node val2) {
-        this.val1 = val1;
-        this.val2 = val2;
+
+    public ADD() {};
+
+    public ADD(int val1, int val2) {
+        super(val1, val2);
+
     }
 
-    public Node getVal1() { return val1; }
-    public void setVal1(Node val1) { this.val1 = val1; }
-    public Node getVal2() { return val2; }
-    public void setVal2(Node val2) { this.val2 = val2; }
+    public int getVal1() { return val1; }
+    public void setVal1(int val1) { this.val1 = val1; }
+    public int getVal2() { return val2; }
+    public void setVal2(int val2) { this.val2 = val2; }
 
     @Override
     public int evaluer() {
-        return val1.evaluer() + val2.evaluer();
+        return val1+ val2;
     }
 }
+

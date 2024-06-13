@@ -1,17 +1,21 @@
-public class NON extends Node {
-    private Node val;
+package operateurs;
+import Arbre.*;
 
-    public NON() {}
+public class NON extends RegleGen {
+    public int val;
+    public NON(int val) {
+       super();
 
-    public NON(Node val) {
-        this.val = val;
+       this.val = val;
     }
-
-    public Node getVal() { return val; }
-    public void setVal(Node val) { this.val = val; }
 
     @Override
     public int evaluer() {
-        return val.evaluer() == 0 ? 1 : 0;
+        if (val==0)
+        {
+            return 1;
+        }
+        return 0;
     }
 }
+

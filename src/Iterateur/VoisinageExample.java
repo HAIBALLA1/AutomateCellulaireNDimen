@@ -1,3 +1,4 @@
+package Iterateur;
 import java.util.Iterator;
 
 //Cette classe représente un voisinage... Le point x est le point étudié, 

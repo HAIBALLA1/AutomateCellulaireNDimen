@@ -1,10 +1,9 @@
+package Automate ;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class parcoursTab implements Iterable<Grillev2>,Iterator<Grillev2>
 {
-
     private int taille;
     private ArrayList<Grillev2> grille;
     private int index=0;
@@ -20,7 +19,6 @@ public class parcoursTab implements Iterable<Grillev2>,Iterator<Grillev2>
     {
         return index < taille;
     }
-
     public boolean increment()
     {
         if( index + 1 < taille)
@@ -30,13 +28,11 @@ public class parcoursTab implements Iterable<Grillev2>,Iterator<Grillev2>
         }
         else
         {
-            //System.out.println("Imposible d'incrémenter outOfBound tab_dynamique");
+
             return false;
         }
     }
 
-
-//Problème avec la façon d'itérer
     @Override
     public Grillev2 next()
     {
@@ -56,56 +52,5 @@ public class parcoursTab implements Iterable<Grillev2>,Iterator<Grillev2>
     {
         return this;
     }
-
-
-//    hasNext_range vérifie qu'on n'est pas en dehors de l'ArrayList
-//    public boolean hasNext_range()
-//    {
-//        if( index < grille.size())
-//        {
-//
-//            return true;
-//        }
-//    }
-
-    //
-//    @Override
-//    public boolean hasNext()
-//    {
-//        //level and Instanceof Cellule
-//        if(index<grille.size())
-//        {
-//            if (!(grille.get(index) instanceof Cellule))
-//            {
-//                TableauDynamiqueND tab = (TableauDynamiqueND) grille.get(index);
-//                if (tab.getLevel() == 1)
-//                {
-//                    return false;
-//                }
-//                else
-//                {
-//                    index++;
-//                    return true;
-//                }
-//            }
-//            return false;
-//            }
-//        return false;
-//    }
-//
-//    //hasNext2 ne s'occupe plus de savoir si on accède a des cellules hors case, cette tache est confié aux fct appelantes
-//    public boolean hasNext2()
-//    {
-//        Grillev2 tab_case = grille.get(index);
-//        if(tab_case instanceof Cellule && tab_case.getDimension().size() != 1)
-//        {
-//            return true;
-//        }
-//        else
-//        {
-//            index+=1;
-//            return false;
-//        }
-//    }
 
 }

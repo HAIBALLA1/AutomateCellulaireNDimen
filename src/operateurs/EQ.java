@@ -1,21 +1,24 @@
-public class EQ extends Node {
-    private Node val1;
-    private Node val2;
+package operateurs;
+import Arbre.*;
 
-    public EQ() {}
+public class EQ extends RegleGen {
 
-    public EQ(Node val1, Node val2) {
-        this.val1 = val1;
-        this.val2 = val2;
+
+
+
+    public EQ(int val1, int val2) {
+        super(val1, val2);
+
     }
 
-    public Node getVal1() { return val1; }
-    public void setVal1(Node val1) { this.val1 = val1; }
-    public Node getVal2() { return val2; }
-    public void setVal2(Node val2) { this.val2 = val2; }
+    public int getVal1() { return super.val1; }
+
+    public int getVal2() { return super.val2; }
+
 
     @Override
     public int evaluer() {
-        return val1.evaluer() == val2.evaluer() ? 1 : 0;
+
+        return val1 == val2 ? 1 : 0;
     }
 }

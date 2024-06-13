@@ -1,3 +1,7 @@
+package Voisinages;
+import Automate.* ;
+import  operateurs.*;
+
 public class InvalidNeighborException extends Exception
 {
     private int dimension_grille;

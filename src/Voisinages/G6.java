@@ -1,3 +1,7 @@
+package Voisinages;
+import Automate.* ;
+import  operateurs.*;
+
 public class G6 extends Neighbors {
 
     public G6(Cellule G0, Grillev2 Grille) throws InvalidNeighborException {
@@ -7,11 +11,5 @@ public class G6 extends Neighbors {
         }
     }
 
-    @Override
-    public int evaluer() {
-        System.out.println("Je suis passé par là ");
-        // Implémentation de l'évaluation pour le voisinage G6
-        // Cette méthode doit être définie en fonction des besoins spécifiques
-        return 0; // Valeur par défaut, à modifier selon l'implémentation réelle
-    }
+
 }
