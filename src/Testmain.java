@@ -28,7 +28,7 @@ public class Testmain {
         initialiserGrille(tab);
 
         // Définir une règle qui provoque des changements intéressants
-        String regle = "SI(OU(EQ(COMPTER(G8), 2), EQ(COMPTER(G8), 3)), 1, 0)";
+        String regle = "SI(OU(EQ(COMPTER(G8), 2), EQ(COMPTER(G0), 3)), 1, 0)";
 
         TraitRegle traitRegle = new TraitRegle();
 

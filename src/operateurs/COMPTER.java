@@ -26,17 +26,5 @@ public class COMPTER extends RegleGen {
         return count;
     }
 
-  /*  public void setVal1(Node child) {
-        if (child instanceof Neighbors) {
-            this.voisinage = (Neighbors) child;
-        } else {
-            throw new IllegalArgumentException("COMPTER node requires a Neighbors child");
-        }
-    }
 
-    public Node getVal() {
-        return voisinage;
-    }
-
-   */
 }

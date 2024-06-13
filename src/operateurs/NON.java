@@ -1,5 +1,4 @@
 package operateurs;
-import Arbre.*;
 
 public class NON extends RegleGen {
     public int val;

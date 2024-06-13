@@ -9,7 +9,6 @@ public class TraitRegle {
         return tokens;
     }
     public int recurs(String [] tokens,int[] index,Cellule cellule, Grillev2 grille) {
-        //Stack<Node> parentStack = new Stack<>();
         int f = 0;
         //condition d'arret
         if (index[0] >= tokens.length) {
@@ -57,24 +56,23 @@ public class TraitRegle {
                 }
         }
     }
-        private int evaluerOperation(String[] tokens, int[] index, String operation,Cellule cellule, Grillev2 grille) {
+    private int evaluerOperation(String[] tokens, int[] index, String operation,Cellule cellule, Grillev2 grille) {
         if (tokens[index[0]].trim().equals("(")) {
-            index[0]++; // Skip '('
+            index[0]++; // on sote  '('
         } else {
             throw new IllegalArgumentException("Expected '(' after " + operation);
         }
-
         int gauche = recurs(tokens, index,cellule,grille);
 
         if (tokens[index[0]].trim().equals(",")) {
-            index[0]++; // Skip ','
+            index[0]++; // on sote ','
         } else {
             throw new IllegalArgumentException("Expected ',' in " + operation);
         }
         int droite = recurs(tokens, index,cellule,grille);
 
         if (tokens[index[0]].trim().equals(")")) {
-            index[0]++; // Skip ')'
+            index[0]++; // on sote ')'
         } else {
             throw new IllegalArgumentException("Expected ')' after " + operation);
         }
@@ -82,12 +80,10 @@ public class TraitRegle {
         switch (operation) {
             case "ADD":
                 return new ADD(gauche, droite).evaluer();
-
             case "ET":
                 return new ET(gauche, droite).evaluer();
             case "OU":
                 return new OU(gauche, droite).evaluer();
-
             case "EQ":
                 return new EQ(gauche, droite).evaluer();
             case "SUP":
@@ -98,24 +94,20 @@ public class TraitRegle {
                 return new SUB(gauche, droite).evaluer();
             case "MUL":
                 return new MUL(gauche, droite).evaluer();
-          //  case "COMPTER":
-               // return new COMPTER(gauche, droite).evaluer();
-            // Ajoutez d'autres cas pour d'autres opérations si nécessaire
             default:
                 throw new IllegalArgumentException("Unknown operation: " + operation);
         }
     }
     private int evaluerOperationSI(String[] tokens, int[] index,Cellule cellule, Grillev2 grille) {
         if (tokens[index[0]].trim().equals("(")) {
-            index[0]++; // Skip '('
+            index[0]++; // on sote '('
         } else {
             throw new IllegalArgumentException("Expected '(' after SI");
         }
-
         int condition = recurs(tokens, index,cellule,  grille);
 
         if (tokens[index[0]].trim().equals(",")) {
-            index[0]++; // Skip ','
+            index[0]++; // on sote ','
         } else {
             throw new IllegalArgumentException("Expected ',' in SI");
         }
@@ -123,45 +115,40 @@ public class TraitRegle {
         int alors = recurs(tokens, index,cellule,  grille);
 
         if (tokens[index[0]].trim().equals(",")) {
-            index[0]++; // Skip ','
+            index[0]++; // on sote ','
         } else {
             throw new IllegalArgumentException("Expected ',' in SI");
         }
-
         int sinon = recurs(tokens, index,cellule,  grille);
 
         if (tokens[index[0]].trim().equals(")")) {
-            index[0]++; // Skip ')'
+            index[0]++; // on sote ')'
         } else {
             throw new IllegalArgumentException("Expected ')' after SI");
         }
-
         return new SI(condition, alors, sinon).evaluer();
     }
     private int evaluerOperationNon(String[] tokens, int[] index,Cellule cellule, Grillev2 grille) {
         if (tokens[index[0]].trim().equals("(")) {
-            index[0]++; // Skip '('
+            index[0]++; // on sote '('
         } else {
             throw new IllegalArgumentException("Expected '(' after NON");
         }
-
         int val = recurs(tokens, index,cellule,  grille);
 
         if (tokens[index[0]].trim().equals(")")) {
-            index[0]++; // Skip ')'
+            index[0]++; // on sote ')'
         } else {
             throw new IllegalArgumentException("Expected ')' after NON");
         }
-
         return new NON(val).evaluer();
     }
     private int evaluerOperationCOMPTER(String[] tokens, int[] index, Cellule cellule, Grillev2 grille) {
         if (tokens[index[0]].trim().equals("(")) {
-            index[0]++; // Skip '('
+            index[0]++; // on sote '('
         } else {
             throw new IllegalArgumentException("Expected '(' after COMPTER");
         }
-
         String voisinageToken = tokens[index[0]++].trim();
         Neighbors voisinage;
 
@@ -176,9 +163,8 @@ public class TraitRegle {
             default:
                 throw new IllegalArgumentException("Unknown neighborhood type: " + voisinageToken);
         }
-
         if (tokens[index[0]].trim().equals(")")) {
-            index[0]++; // Skip ')'
+            index[0]++; // on sote ')'
         } else {
             throw new IllegalArgumentException("Expected ')' after COMPTER operation");
         }
