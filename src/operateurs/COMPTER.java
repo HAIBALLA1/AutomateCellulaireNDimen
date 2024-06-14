@@ -8,7 +8,6 @@ public class COMPTER extends RegleGen {
     public COMPTER() {}
 
     public COMPTER(Neighbors voisinage) {
-
         this.voisinage = voisinage;
     }
 

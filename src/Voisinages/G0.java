@@ -1,6 +1,5 @@
 package Voisinages;
 import Automate.* ;
-import  operateurs.*;
 
 public class G0 extends Neighbors {
     public G0(Cellule cellule, Grillev2 grille) {

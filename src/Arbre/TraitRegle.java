@@ -4,10 +4,12 @@ import Voisinages.*;
 import Automate.*;
 
 public class TraitRegle {
+
     public String [] construireArbreDepuisRegle(String regle) {
         String[] tokens = regle.split("(?<=[,()])|(?=[,()])|\\s+");
         return tokens;
     }
+
     public int recurs(String [] tokens,int[] index,Cellule cellule, Grillev2 grille) {
         int f = 0;
         //condition d'arret
@@ -39,7 +41,6 @@ public class TraitRegle {
                 return evaluerOperation(tokens, index, "MUL",cellule,  grille);
             case "COMPTER":
                 return evaluerOperationCOMPTER(tokens,index,  cellule,  grille);
-
             case "(":
                 int result = recurs(tokens, index,cellule,grille);
                 if (tokens[index[0]].trim().equals(")")) {
@@ -52,7 +53,7 @@ public class TraitRegle {
                 try {
                     return Integer.parseInt(token);
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Invalid token: " + token);
+                    throw new IllegalArgumentException("le token n'est pas valide: " + token);
                 }
         }
     }
@@ -60,21 +61,20 @@ public class TraitRegle {
         if (tokens[index[0]].trim().equals("(")) {
             index[0]++; // on sote  '('
         } else {
-            throw new IllegalArgumentException("Expected '(' after " + operation);
+            throw new IllegalArgumentException("on doit avoir '(' apres " + operation);
         }
         int gauche = recurs(tokens, index,cellule,grille);
-
         if (tokens[index[0]].trim().equals(",")) {
             index[0]++; // on sote ','
         } else {
-            throw new IllegalArgumentException("Expected ',' in " + operation);
+            throw new IllegalArgumentException("on doit avoir ',' dans  " + operation);
         }
         int droite = recurs(tokens, index,cellule,grille);
 
         if (tokens[index[0]].trim().equals(")")) {
             index[0]++; // on sote ')'
         } else {
-            throw new IllegalArgumentException("Expected ')' after " + operation);
+            throw new IllegalArgumentException("on doit avoir ')' apres " + operation);
         }
 
         switch (operation) {
@@ -95,21 +95,21 @@ public class TraitRegle {
             case "MUL":
                 return new MUL(gauche, droite).evaluer();
             default:
-                throw new IllegalArgumentException("Unknown operation: " + operation);
+                throw new IllegalArgumentException("operation non connue: " + operation);
         }
     }
     private int evaluerOperationSI(String[] tokens, int[] index,Cellule cellule, Grillev2 grille) {
         if (tokens[index[0]].trim().equals("(")) {
             index[0]++; // on sote '('
         } else {
-            throw new IllegalArgumentException("Expected '(' after SI");
+            throw new IllegalArgumentException("on doit avoir '(' apres SI");
         }
         int condition = recurs(tokens, index,cellule,  grille);
 
         if (tokens[index[0]].trim().equals(",")) {
             index[0]++; // on sote ','
         } else {
-            throw new IllegalArgumentException("Expected ',' in SI");
+            throw new IllegalArgumentException("on doit avoir ',' dans SI");
         }
 
         int alors = recurs(tokens, index,cellule,  grille);
@@ -117,14 +117,14 @@ public class TraitRegle {
         if (tokens[index[0]].trim().equals(",")) {
             index[0]++; // on sote ','
         } else {
-            throw new IllegalArgumentException("Expected ',' in SI");
+            throw new IllegalArgumentException("on doit avoir ',' dans SI");
         }
         int sinon = recurs(tokens, index,cellule,  grille);
 
         if (tokens[index[0]].trim().equals(")")) {
             index[0]++; // on sote ')'
         } else {
-            throw new IllegalArgumentException("Expected ')' after SI");
+            throw new IllegalArgumentException("on doit avoir ')' apres SI");
         }
         return new SI(condition, alors, sinon).evaluer();
     }
@@ -132,14 +132,14 @@ public class TraitRegle {
         if (tokens[index[0]].trim().equals("(")) {
             index[0]++; // on sote '('
         } else {
-            throw new IllegalArgumentException("Expected '(' after NON");
+            throw new IllegalArgumentException("on doit avoir '(' apres NON");
         }
         int val = recurs(tokens, index,cellule,  grille);
 
         if (tokens[index[0]].trim().equals(")")) {
             index[0]++; // on sote ')'
         } else {
-            throw new IllegalArgumentException("Expected ')' after NON");
+            throw new IllegalArgumentException("on doit avoir ')' apres NON");
         }
         return new NON(val).evaluer();
     }
@@ -147,7 +147,7 @@ public class TraitRegle {
         if (tokens[index[0]].trim().equals("(")) {
             index[0]++; // on sote '('
         } else {
-            throw new IllegalArgumentException("Expected '(' after COMPTER");
+            throw new IllegalArgumentException("on doit avoir '(' apres COMPTER");
         }
         String voisinageToken = tokens[index[0]++].trim();
         Neighbors voisinage;
@@ -162,6 +162,9 @@ public class TraitRegle {
             case "G4":
                 voisinage = new G4(cellule, grille);
                 break;
+            case "G6":
+                voisinage = new G6(cellule, grille);
+                break;
             case "G8":
                 voisinage = new G8(cellule, grille);
                 break;
@@ -169,12 +172,12 @@ public class TraitRegle {
                 voisinage = new G26(cellule, grille);
                 break;
             default:
-                throw new IllegalArgumentException("Unknown neighborhood type: " + voisinageToken);
+                throw new IllegalArgumentException("voisins non connu type: " + voisinageToken);
         }
         if (tokens[index[0]].trim().equals(")")) {
             index[0]++; // on sote ')'
         } else {
-            throw new IllegalArgumentException("Expected ')' after COMPTER operation");
+            throw new IllegalArgumentException("on doit avoir ')' apres COMPTER ");
         }
 
         return new COMPTER(voisinage).evaluer();

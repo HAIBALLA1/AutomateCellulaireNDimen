@@ -1,6 +1,4 @@
 package Voisinages;
-import Automate.* ;
-import  operateurs.*;
 
 public class InvalidNeighborException extends Exception
 {

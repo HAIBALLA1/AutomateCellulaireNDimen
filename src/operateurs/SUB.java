@@ -1,7 +1,5 @@
 package operateurs;
 
-import Arbre.*;
-
 public class SUB extends RegleGen {
 
     public SUB(int val1, int val2) {

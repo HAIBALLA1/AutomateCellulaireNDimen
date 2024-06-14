@@ -26,7 +26,7 @@ public class TableauDynamiqueND extends Grillev2 implements Iterable{
     private void initializeCells(int size) {
         this.taille = size;
         for (int i = 0; i < taille; i++) {
-            int status = (Math.random() < 0.5) ? 0 : 1; // Initialisation aléatoire avec 0 ou 1
+            int status = 0;
             Cellule c = new Cellule(status);
             tab_dynamique.add(c);
         }

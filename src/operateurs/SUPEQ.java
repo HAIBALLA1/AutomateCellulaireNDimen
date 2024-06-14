@@ -1,5 +1,4 @@
 package operateurs;
-import Arbre.*;
 
 public class SUPEQ extends RegleGen {
 

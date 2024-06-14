@@ -43,13 +43,13 @@ public abstract class Neighbors  {
         }
     }
 
-    protected boolean check_border(ArrayList<Integer> coordinates) {
-        int border = 0;
-        for (Integer i : coordinates) {
-            if (i < 0 || i >= grille.getDimension().get(border)) {
+        protected boolean verifie_limite(ArrayList<Integer> coord) {
+        int limite = 0;
+        for (Integer i : coord) {
+            if (i < 0 || i >= grille.getDimension().get(limite)) {
                 return true;
             }
-            border++;
+            limite++;
         }
         return false;
     }
@@ -58,7 +58,7 @@ public abstract class Neighbors  {
         Iterator<ArrayList<Integer>> iterator = neighbors_coordinates.iterator();
         while (iterator.hasNext()) {
             ArrayList<Integer> coordinates = iterator.next();
-            if (check_border(coordinates)) {
+            if (verifie_limite(coordinates)) {
                 iterator.remove();
             }
         }

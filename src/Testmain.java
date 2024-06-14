@@ -10,6 +10,7 @@ import InterfaceGraphique.*;
 import Arbre.TraitRegle;
 
 public class Testmain {
+
     public static void main(String[] args) throws Exception {
         // Lire le fichier XML
         File inputFile = new File("/home/ing/Bureau/myProject/src/Fichiers/automate.xml");
@@ -51,50 +52,58 @@ public class Testmain {
 
         TraitRegle traitRegle = new TraitRegle();
 
-        int cycles = 200; // Nombre de cycles à exécuter
-        for (int cycle = 0; cycle < cycles; cycle++) {
-            System.out.println("Cycle " + cycle);
+        int cycles = 100; // Nombre de cycles à exécuter
+        try {
+            for (int cycle = 0; cycle < cycles; cycle++) {
+                System.out.println("Cycle " + cycle);
 
-            // Parcourir toutes les cellules du tableau 2D
-            for (int i = 0; i < dimensions.get(0); i++) {
-                for (int j = 0; j < dimensions.get(1); j++) {
-                    // Définition des coordonnées pour récupérer une cellule
-                    ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i, j));
+                // Parcourir toutes les cellules du tableau 2D
+                for (int i = 0; i < dimensions.get(0); i++) {
+                    for (int j = 0; j < dimensions.get(1); j++) {
+                        // Définition des coordonnées pour récupérer une cellule
+                        ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i, j));
 
-                    // Récupération de la cellule
-                    Cellule c1 = tab.getCellulev2(coord);
-                    if (c1 == null) {
-                        throw new NullPointerException("Cellule c1 est null");
+                        // Récupération de la cellule
+                        Cellule c1 = tab.getCellulev2(coord);
+                        if (c1 == null) {
+                            throw new NullPointerException("Cellule c1 est null");
+                        }
+                        if (c1.getCoordonnees() == null) {
+                            throw new NullPointerException("Coordonnées de la cellule c1 sont nulles");
+                        }
+
+                        // Construire l'arbre à partir de la règle
+                        String[] tokens = traitRegle.construireArbreDepuisRegle(regle);
+                        int result = traitRegle.recurs(tokens, new int[]{0}, c1, tab);
+
+                        System.out.println("Résultat de la règle pour la cellule (" + i + ", " + j + ") : " + result);
+
+                        // Mettre à jour la couleur de la cellule en fonction du résultat
+                        Color newColor = result == 1 ? Color.BLUE : Color.WHITE;
+                        ColorGrid.setCellColor(i, j, newColor, cycle);
+
+                        // Mettre à jour l'état de la cellule en fonction du résultat
+                        c1.setEtat(result);
                     }
-                    if (c1.getCoordonnees() == null) {
-                        throw new NullPointerException("Coordonnées de la cellule c1 sont nulles");
-                    }
-
-                    // Construire l'arbre à partir de la règle
-                    String[] tokens = traitRegle.construireArbreDepuisRegle(regle);
-                    int result = traitRegle.recurs(tokens, new int[]{0}, c1, tab);
-
-                    System.out.println("Résultat de la règle pour la cellule (" + i + ", " + j + ") : " + result);
-
-                    // Mettre à jour la couleur de la cellule en fonction du résultat
-                    Color newColor = result == 1 ? Color.BLUE : Color.WHITE;
-                    ColorGrid.setCellColor(i, j, newColor, cycle);
-
-                    // Mettre à jour l'état de la cellule en fonction du résultat
-                    c1.setEtat(result);
                 }
+
+                // Pause pour visualiser les changements
+                ColorGrid.pause(4);
+
+                // Affichage des cellules de la grille
+                tab.DFS();
+
+                // Pause pour mieux visualiser les différences entre les cycles
+                Thread.sleep(2000); // 500 millisecondes = 0.5 seconde
             }
-
-            // Pause pour visualiser les changements
-            ColorGrid.pause(0.5);
-
-            // Affichage des cellules de la grille
-            tab.DFS();
+        } catch (InterruptedException e) {
+            System.out.println("Thread interrupté");
         }
 
         // Fermeture de l'affichage
         ColorGrid.stop();
     }
+
 
     private static void initialiserGrille(TableauDynamiqueND tab, String etatInitial, ArrayList<Integer> dimensions) {
         if (etatInitial.startsWith("RANDOM")) {
@@ -108,6 +117,26 @@ public class Testmain {
                     }
                 }
             }
+        } else if (etatInitial.startsWith("(") && etatInitial.endsWith(")")) {
+            String[] coordonnees = etatInitial.substring(1, etatInitial.length() - 1).split(",");
+            if (coordonnees.length == 2) {
+                try {
+                    int x = Integer.parseInt(coordonnees[0].trim());
+                    int y = Integer.parseInt(coordonnees[1].trim());
+                    if (x >= 0 && x < dimensions.get(0) && y >= 0 && y < dimensions.get(1)) {
+                        tab.getCellulev2(new ArrayList<>(Arrays.asList(x, y))).setEtat(1);
+                    } else {
+                        System.err.println("Coordonnées hors limites: (" + x + ", " + y + ")");
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Erreur de format des coordonnées: " + etatInitial);
+                }
+            } else {
+                System.err.println("Erreur de format des coordonnées: " + etatInitial);
+            }
+        } else {
+            System.err.println("Format d'état initial non reconnu: " + etatInitial);
         }
     }
+
 }
