@@ -1,20 +1,23 @@
 <automate>
     <Dimensionalite>2D</Dimensionalite>
     <Taille>
-        <dimension>8</dimension>
-        <dimension>6</dimension>
+        <dimension>30</dimension>
+        <dimension>30</dimension>
     </Taille>
     <Regle>
-        SI(EQ(COMPTER(G4), 1), 1, 0)
+        SI(EQ(COMPTER(G2), 0), SI(EQ(COMPTER(G8), 3), 1, 0), SI(EQ(COMPTER(G8), 2), 1, SI(EQ(COMPTER(G8), 3), 1, 0)))
     </Regle>
-    <!--<EtatInitial>RANDOM(15)</EtatInitial>-->
-    <EtatInitial>(0,3)</EtatInitial>
+    <EtatInitial>(0 ,14)</EtatInitial>
     <!-- Initialisation aléatoire avec 15% de chance d'être 1 (allumé) -->
     <Voisinages>
         <Voisinage>G0</Voisinage>
-        <Voisinage>G6</Voisinage>
-        <Voisinage>G8</Voisinage>
+        <Voisinage>G1</Voisinage>
+        <Voisinage>G2</Voisinage>
+        <Voisinage>G3</Voisinage>
         <Voisinage>G4</Voisinage>
-        <Voisinage>G24</Voisinage>
+        <Voisinage>G5</Voisinage>
+        <Voisinage>G6</Voisinage>
+        <Voisinage>G7</Voisinage>
+        <Voisinage>G8</Voisinage>
     </Voisinages>
 </automate>

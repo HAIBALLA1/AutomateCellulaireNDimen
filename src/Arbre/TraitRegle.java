@@ -43,7 +43,7 @@ public class TraitRegle {
                 return evaluerOperationCOMPTER(tokens,index,  cellule,  grille);
             case "(":
                 int result = recurs(tokens, index,cellule,grille);
-                if (tokens[index[0]].trim().equals(")")) {
+                if (index[0] < tokens.length && tokens[index[0]].trim().equals(")")) {
                     index[0]++; // Skip ')'
                 }
                 return result;
@@ -71,7 +71,7 @@ public class TraitRegle {
         }
         int droite = recurs(tokens, index,cellule,grille);
 
-        if (tokens[index[0]].trim().equals(")")) {
+        if (index[0] < tokens.length && tokens[index[0]].trim().equals(")")) {
             index[0]++; // on sote ')'
         } else {
             throw new IllegalArgumentException("on doit avoir ')' apres " + operation);
@@ -121,7 +121,7 @@ public class TraitRegle {
         }
         int sinon = recurs(tokens, index,cellule,  grille);
 
-        if (tokens[index[0]].trim().equals(")")) {
+        if (index[0] < tokens.length && tokens[index[0]].trim().equals(")")) {
             index[0]++; // on sote ')'
         } else {
             throw new IllegalArgumentException("on doit avoir ')' apres SI");
@@ -136,7 +136,7 @@ public class TraitRegle {
         }
         int val = recurs(tokens, index,cellule,  grille);
 
-        if (tokens[index[0]].trim().equals(")")) {
+        if (index[0] < tokens.length && tokens[index[0]].trim().equals(")")) {
             index[0]++; // on sote ')'
         } else {
             throw new IllegalArgumentException("on doit avoir ')' apres NON");
@@ -145,10 +145,15 @@ public class TraitRegle {
     }
     private int evaluerOperationCOMPTER(String[] tokens, int[] index, Cellule cellule, Grillev2 grille) {
         if (tokens[index[0]].trim().equals("(")) {
-            index[0]++; // on sote '('
+            index[0]++; // on saute '('
         } else {
-            throw new IllegalArgumentException("on doit avoir '(' apres COMPTER");
+            throw new IllegalArgumentException("on doit avoir '(' après COMPTER");
         }
+
+        if (cellule == null || cellule.getCoordonnees() == null || cellule.getCoordonnees().isEmpty()) {
+            throw new IllegalArgumentException("Cellule G0 ou ses coordonnées sont nulles ou vides");
+        }
+
         String voisinageToken = tokens[index[0]++].trim();
         Neighbors voisinage;
 
@@ -175,13 +180,12 @@ public class TraitRegle {
                 throw new IllegalArgumentException("voisins non connu type: " + voisinageToken);
         }
         if (tokens[index[0]].trim().equals(")")) {
-            index[0]++; // on sote ')'
+            index[0]++; // on saute ')'
         } else {
-            throw new IllegalArgumentException("on doit avoir ')' apres COMPTER ");
+            throw new IllegalArgumentException("on doit avoir ')' après COMPTER ");
         }
 
         return new COMPTER(voisinage).evaluer();
     }
-
 
 }

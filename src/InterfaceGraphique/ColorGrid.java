@@ -22,7 +22,7 @@ public class ColorGrid {
 
         for (int i = 0; i < hauteur; i++) {
             for (int j = 0; j < largeur; j++) {
-                colors[i][j] = Color.BLACK;
+                colors[i][j] = Color.WHITE;
             }
         }
 
@@ -54,13 +54,6 @@ public class ColorGrid {
         }
     }
 
-    public static Color getCellColor(int r, int c) {
-        if (r < 0 || r >= hauteur || c < 0 || c >= largeur) {
-            throw new RuntimeException("Invalid cell coordinates: (" + r + ", " + c + ")");
-        }
-
-        return colors[r][c];
-    }
 
     public static void pause(double seconds) {
         try {
@@ -86,7 +79,6 @@ public class ColorGrid {
             if (colors == null) {
                 return;
             }
-
             for (int r = 0; r < hauteur; r++) {
                 for (int c = 0; c < largeur; c++) {
                     g.setColor(colors[r][c]);
