@@ -46,6 +46,14 @@ public class Testmain {
         TableauDynamiqueND tab = new TableauDynamiqueND(dimensions);
         tab.set_coord(tab);
 
+        // Lire le plan à afficher en 3D, s'il est présent
+        int plan = -1;
+        if (dimensions.size() >= 3) {
+            String planStr = doc.getElementsByTagName("Plan").item(0).getTextContent().trim();
+            plan = Integer.parseInt(planStr);
+        }
+
+
         // Initialisation de ColorGrid
         int taillecase = 20;
         ColorGrid.initialiser(taillecase, dimensions.size() == 1 ? dimensions.get(0) : dimensions.get(1), dimensions.get(0));
@@ -57,12 +65,15 @@ public class Testmain {
 
         TraitRegle traitRegle = new TraitRegle();
 
-        int cycles = 29; // Nombre de cycles à exécuter
+        int cycles = 50; // Nombre de cycles à exécuter
 
+        //verifier quelle dimension est en le fichier xml
         if (dimensions.size() == 1) {
             afficherAutomate1D(tab, dimensions.get(0), cycles, traitRegle);
-        } else {
+        } else if (dimensions.size() == 2) {
             afficherAutomate2D(tab, dimensions, cycles, traitRegle, regle);
+        } else if (dimensions.size() == 3) {
+                afficherAutomate3D(tab, dimensions, cycles, traitRegle, regle, plan);
         }
 
         // Fermeture de l'affichage
@@ -141,27 +152,55 @@ public class Testmain {
     private static void afficherAutomate2D(TableauDynamiqueND tab, ArrayList<Integer> dimensions, int cycles, TraitRegle traitRegle, String regle) throws Exception {
         for (int cycle = 0; cycle < cycles; cycle++) {
             System.out.println("Cycle " + cycle);
-            TableauDynamiqueND newtab = new TableauDynamiqueND(dimensions);
+
+            // Création d'une copie du tableau des cellules
+            TableauDynamiqueND newTab = new TableauDynamiqueND(dimensions);
+            newTab.set_coord(newTab);
+
+            // Appliquer les règles à la copie
             for (int i = 0; i < dimensions.get(0); i++) {
                 for (int j = 0; j < dimensions.get(1); j++) {
                     ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i, j));
                     Cellule c1 = tab.getCellulev2(coord);
-                    if (c1 == null) throw new NullPointerException("Cellule c1 est null");
-                    if (c1.getCoordonnees() == null) throw new NullPointerException("Coordonnées de la cellule c1 sont nulles");
+                    if (c1 == null || c1.getCoordonnees() == null) {
+                        throw new IllegalArgumentException("Cellule c1 ou ses coordonnées sont nulles");
+                    }
+
                     String[] tokens = traitRegle.construireArbreDepuisRegle(regle);
                     int result = traitRegle.recurs(tokens, new int[]{0}, c1, tab);
-                    System.out.println("Résultat de la règle pour la cellule (" + i + ", " + j + ") : " + result);
-                    Color newColor = result == 1 ? Color.BLUE : Color.WHITE;
-                    ColorGrid.setCellColor(i, j, newColor, cycle);
-                    newtab.getCellulev2(coord).setEtat(result);
+
+                    Cellule newCell = newTab.getCellulev2(coord);
+                    newCell.setEtat(result);
                 }
             }
+
+            // Mettre à jour les cellules actuelles à partir de la copie
+            for (int i = 0; i < dimensions.get(0); i++) {
+                for (int j = 0; j < dimensions.get(1); j++) {
+                    ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i, j));
+                    Cellule c1 = tab.getCellulev2(coord);
+                    Cellule newCell = newTab.getCellulev2(coord);
+
+                    if (c1.getStatus() != newCell.getStatus()) {
+                        c1.setEtat(newCell.getStatus());
+                        Color newColor = newCell.getStatus() == 1 ? Color.BLUE : Color.WHITE;
+                        ColorGrid.setCellColor(i, j, newColor, cycle);
+                    }
+                }
+            }
+
+            // Pause pour visualiser les changements
             ColorGrid.pause(0.1);
-            tab = newtab;
+
+            // Affichage des cellules de la grille
             tab.DFS();
+
+            // Pause pour mieux visualiser les différences entre les cycles
             Thread.sleep(50); // 50 millisecondes
         }
     }
+
+
 
     private static void afficherAutomate1D(TableauDynamiqueND tab, int taille, int cycles, TraitRegle traitRegle) throws Exception {
         for (int cycle = 0; cycle < cycles; cycle++) {
@@ -187,4 +226,48 @@ public class Testmain {
             Thread.sleep(50); // 50 millisecondes
         }
     }
+
+    private static void afficherAutomate3D(TableauDynamiqueND tab, ArrayList<Integer> dimensions, int cycles, TraitRegle traitRegle, String regle, int plan) throws InterruptedException {
+        for (int cycle = 0; cycle < cycles; cycle++) {
+            System.out.println("Cycle " + cycle);
+            for (int i = 0; i < dimensions.get(0); i++) {
+                for (int j = 0; j < dimensions.get(1); j++) {
+                    // Définition des coordonnées pour récupérer une cellule
+                    ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i, j, plan));
+
+                    // Récupération de la cellule
+                    Cellule c1 = tab.getCellulev2(coord);
+                    if (c1 == null) {
+                        throw new NullPointerException("Cellule c1 est null");
+                    }
+                    if (c1.getCoordonnees() == null) {
+                        throw new NullPointerException("Coordonnées de la cellule c1 sont nulles");
+                    }
+
+                    // Construire l'arbre à partir de la règle
+                    String[] tokens = traitRegle.construireArbreDepuisRegle(regle);
+                    int result = traitRegle.recurs(tokens, new int[]{0}, c1, tab);
+
+                    System.out.println("Résultat de la règle pour la cellule (" + i + ", " + j + ", " + plan + ") : " + result);
+
+                    // Mettre à jour la couleur de la cellule en fonction du résultat
+                    Color newColor = result == 1 ? Color.BLUE : Color.WHITE;
+                    ColorGrid.setCellColor(i, j, newColor, cycle);
+
+                    // Mettre à jour l'état de la cellule en fonction du résultat
+                    c1.setEtat(result);
+                }
+            }
+
+            // Pause pour visualiser les changements
+            ColorGrid.pause(0.1);
+
+            // Affichage des cellules de la grille
+            tab.DFS();
+
+            // Pause pour mieux visualiser les différences entre les cycles
+            Thread.sleep(500);
+        }
+    }
 }
+

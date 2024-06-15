@@ -2,22 +2,17 @@
     <Dimensionalite>2D</Dimensionalite>
     <Taille>
         <dimension>30</dimension>
-        <dimension>30</dimension>
+        <dimension>15</dimension>
     </Taille>
     <Regle>
-        SI(EQ(COMPTER(G2), 0), SI(EQ(COMPTER(G8), 3), 1, 0), SI(EQ(COMPTER(G8), 2), 1, SI(EQ(COMPTER(G8), 3), 1, 0)))
+        SI(EQ(COMPTER(G0), 0), SI(EQ(COMPTER(G8), 3), 1, 0), SI(EQ(COMPTER(G8), 2), 1, SI(EQ(COMPTER(G8), 3), 1, 0)))
     </Regle>
-    <EtatInitial>(0 ,14)</EtatInitial>
-    <!-- Initialisation aléatoire avec 15% de chance d'être 1 (allumé) -->
+    <!--<Regle> SI(EQ(COMPTER(G4), 1), 1, 0) </Regle>--> <!--la regle du trinagle de Sierpiński-->
+    <EtatInitial>RANDOM(15)</EtatInitial>  <!-- pour une initialisation aleatoire -->
+    <!--<EtatInitial>(0,15)</EtatInitial>--> <!--si vous voulez initialisez des celules precices -->
     <Voisinages>
         <Voisinage>G0</Voisinage>
         <Voisinage>G1</Voisinage>
         <Voisinage>G2</Voisinage>
-        <Voisinage>G3</Voisinage>
-        <Voisinage>G4</Voisinage>
-        <Voisinage>G5</Voisinage>
-        <Voisinage>G6</Voisinage>
-        <Voisinage>G7</Voisinage>
-        <Voisinage>G8</Voisinage>
     </Voisinages>
 </automate>

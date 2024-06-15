@@ -26,7 +26,7 @@ public class ColorGrid {
             }
         }
 
-        panel = new CellPanel();
+        panel = new CellPanel(colors, taillecase, largeur, hauteur);
         frame = new JFrame("ColorGrid");
         frame.getContentPane().add(panel);
         frame.setSize(10 + largeur * taillecase, 25 + hauteur * taillecase);
@@ -54,7 +54,6 @@ public class ColorGrid {
         }
     }
 
-
     public static void pause(double seconds) {
         try {
             Thread.sleep((int) (seconds * 1000));
@@ -65,26 +64,5 @@ public class ColorGrid {
 
     public static void stop() {
         frame.dispose();
-    }
-
-    private static class CellPanel extends JPanel {
-        void drawCell(int r, int c) {
-            Graphics g = getGraphics();
-            g.setColor(colors[r][c]);
-            g.fillRect(c * taillecase, r * taillecase, taillecase, taillecase);
-        }
-
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g); // Call the super class's paintComponent method
-            if (colors == null) {
-                return;
-            }
-            for (int r = 0; r < hauteur; r++) {
-                for (int c = 0; c < largeur; c++) {
-                    g.setColor(colors[r][c]);
-                    g.fillRect(c * taillecase, r * taillecase, taillecase, taillecase);
-                }
-            }
-        }
     }
 }
