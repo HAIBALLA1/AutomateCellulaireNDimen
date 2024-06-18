@@ -12,6 +12,7 @@ import Arbre.TraitRegle;
 public class Testmain {
 
     public static void main(String[] args) throws Exception {
+
         // Lire le fichier XML
         File inputFile = new File("/home/ing/Bureau/myProject/src/Fichiers/automate.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -62,18 +63,22 @@ public class Testmain {
         initialiserGrille(tab, etatInitial, dimensions);
         afficherEtatsDesCellules(tab, dimensions);
 
+        // un objet TraitRegle
 
         TraitRegle traitRegle = new TraitRegle();
 
         int cycles = 50; // Nombre de cycles à exécuter
 
-        //verifier quelle dimension est en le fichier xml
+        //verifier quelle dimension est donnée dans  le fichier xml
         if (dimensions.size() == 1) {
-            afficherAutomate1D(tab, dimensions.get(0), cycles, traitRegle);
+            // Affichage dans le cas de 1D
+            afficherAutomate1D(tab, dimensions.get(0), cycles, traitRegle , regle);
         } else if (dimensions.size() == 2) {
+            //Affichage dans le cas de 2D
             afficherAutomate2D(tab, dimensions, cycles, traitRegle, regle);
         } else if (dimensions.size() == 3) {
-                afficherAutomate3D(tab, dimensions, cycles, traitRegle, regle, plan);
+            //Affichage dans le cas de 3D
+            afficherAutomate3D(tab, dimensions, cycles, traitRegle, regle, plan);
         }
 
         // Fermeture de l'affichage
@@ -81,9 +86,14 @@ public class Testmain {
     }
 
     private static void initialiserGrille(TableauDynamiqueND tab, String etatInitial, ArrayList<Integer> dimensions) {
+
+        // dans le cas ou on veut initialiser les cellules aleatoirement
         if (etatInitial.startsWith("RANDOM")) {
+            // s'assuer de la probabilte qui'une cellule soit en vie
             int pourcentage = Integer.parseInt(etatInitial.replaceAll("[^0-9]", ""));
+
             for (int i = 0; i < dimensions.get(0); i++) {
+               // pour 2D
                 if (dimensions.size() == 2) {
                     for (int j = 0; j < dimensions.get(1); j++) {
                         if (Math.random() * 100 < pourcentage) {
@@ -92,7 +102,10 @@ public class Testmain {
                             tab.getCellulev2(new ArrayList<>(Arrays.asList(i, j))).setEtat(0);
                         }
                     }
-                } else {
+                }
+                // pour 1D
+                else {
+
                     if (Math.random() * 100 < pourcentage) {
                         tab.getCellulev2(new ArrayList<>(Arrays.asList(i))).setEtat(1);
                     } else {
@@ -100,12 +113,20 @@ public class Testmain {
                     }
                 }
             }
-        } else if (etatInitial.startsWith("(") && etatInitial.endsWith(")")) {
+        }
+
+        // Si on veut initialiser des cellules precises
+        else if (etatInitial.startsWith("(") && etatInitial.endsWith(")")) {
+            // recuperation des coordonnees des cellules qui doivent etre initialises , donnees dans le fichier XML
             String[] coordonnees = etatInitial.substring(1, etatInitial.length() - 1).split(",");
+
+            // pour 2D
             if (coordonnees.length == 2 && dimensions.size() == 2) {
                 try {
                     int x = Integer.parseInt(coordonnees[0].trim());
                     int y = Integer.parseInt(coordonnees[1].trim());
+
+                    // s'assurer que les coord nr depassent pas les limites de la grille
                     if (x >= 0 && x < dimensions.get(0) && y >= 0 && y < dimensions.get(1)) {
                         tab.getCellulev2(new ArrayList<>(Arrays.asList(x, y))).setEtat(1);
                     } else {
@@ -114,7 +135,9 @@ public class Testmain {
                 } catch (NumberFormatException e) {
                     System.err.println("Erreur de format des coordonnées: " + etatInitial);
                 }
-            } else if (coordonnees.length == 1 && dimensions.size() == 1) {
+            }
+            // pour 1D
+            else if (coordonnees.length == 1 && dimensions.size() == 1) {
                 try {
                     int x = Integer.parseInt(coordonnees[0].trim());
                     if (x >= 0 && x < dimensions.get(0)) {
@@ -133,6 +156,7 @@ public class Testmain {
         }
     }
 
+     // pour afficher les etats de chaque cellules
     private static void afficherEtatsDesCellules(TableauDynamiqueND tab, ArrayList<Integer> dimensions) {
         for (int i = 0; i < dimensions.get(0); i++) {
             if (dimensions.size() == 2) {
@@ -148,7 +172,7 @@ public class Testmain {
     }
 
 
-
+   // affichage de l'auto en 2D
     private static void afficherAutomate2D(TableauDynamiqueND tab, ArrayList<Integer> dimensions, int cycles, TraitRegle traitRegle, String regle) throws Exception {
         for (int cycle = 0; cycle < cycles; cycle++) {
             System.out.println("Cycle " + cycle);
@@ -190,43 +214,50 @@ public class Testmain {
             }
 
             // Pause pour visualiser les changements
-            ColorGrid.pause(0.1);
+            ColorGrid.pause(0.5);
 
             // Affichage des cellules de la grille
             tab.DFS();
 
             // Pause pour mieux visualiser les différences entre les cycles
-            Thread.sleep(50); // 50 millisecondes
+            Thread.sleep(500); // 50 millisecondes
         }
     }
 
 
+   // // affichage de l'auto en 1D
+   private static void afficherAutomate1D(TableauDynamiqueND tab, int taille, int cycles, TraitRegle traitRegle, String regle) throws Exception {
+       for (int cycle = 0; cycle < cycles; cycle++) {
+           System.out.println("Cycle " + cycle);
+           TableauDynamiqueND newtab = new TableauDynamiqueND(new ArrayList<>(Arrays.asList(taille)));
+           newtab.set_coord(newtab);
 
-    private static void afficherAutomate1D(TableauDynamiqueND tab, int taille, int cycles, TraitRegle traitRegle) throws Exception {
-        for (int cycle = 0; cycle < cycles; cycle++) {
-            System.out.println("Cycle " + cycle);
-            TableauDynamiqueND newtab = new TableauDynamiqueND(new ArrayList<>(Arrays.asList(taille)));
-            for (int i = 0; i < taille; i++) {
-                ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i));
-                Cellule c1 = tab.getCellulev2(coord);
-                if (c1 == null) throw new NullPointerException("Cellule c1 est null");
-                if (c1.getCoordonnees() == null) throw new NullPointerException("Coordonnées de la cellule c1 sont nulles");
-                int left = (i == 0) ? 0 : tab.getCellulev2(new ArrayList<>(Arrays.asList(i - 1))).getStatus();
-                int center = c1.getStatus();
-                int right = (i == taille - 1) ? 0 : tab.getCellulev2(new ArrayList<>(Arrays.asList(i + 1))).getStatus();
-                int result = (left + center + right) > 0 ? 1 : 0; // Règle de Sierpiński simple
-                System.out.println("Résultat de la règle pour la cellule (" + i + ") : " + result);
-                Color newColor = result == 1 ? Color.BLUE : Color.WHITE;
-                ColorGrid.setCellColor(i, cycle, newColor, cycle);
-                newtab.getCellulev2(coord).setEtat(result);
-            }
-            ColorGrid.pause(0.1);
-            tab = newtab;
-            tab.DFS();
-            Thread.sleep(50); // 50 millisecondes
-        }
-    }
+           for (int i = 0; i < taille; i++) {
+               ArrayList<Integer> coord = new ArrayList<>(Arrays.asList(i));
+               Cellule c1 = tab.getCellulev2(coord);
 
+               if (c1 == null) throw new NullPointerException("Cellule c1 est null");
+               if (c1.getCoordonnees() == null) throw new NullPointerException("Coordonnées de la cellule c1 sont nulles");
+
+               // Appliquer la règle en utilisant TraitRegle
+               String[] tokens = traitRegle.construireArbreDepuisRegle(regle);
+               int result = traitRegle.recurs(tokens, new int[]{0}, c1, tab);
+
+               System.out.println("Résultat de la règle pour la cellule (" + i + ") : " + result);
+               Color newColor = result == 1 ? Color.BLUE : Color.WHITE;
+               ColorGrid.setCellColor(i, cycle, newColor, cycle);
+               newtab.getCellulev2(coord).setEtat(result);
+           }
+           ColorGrid.pause(0.1);
+           tab = newtab;
+           tab.DFS();
+           Thread.sleep(50); // 50 millisecondes
+       }
+   }
+
+
+
+    // affichage de l'auto en 3D
     private static void afficherAutomate3D(TableauDynamiqueND tab, ArrayList<Integer> dimensions, int cycles, TraitRegle traitRegle, String regle, int plan) throws InterruptedException {
         for (int cycle = 0; cycle < cycles; cycle++) {
             System.out.println("Cycle " + cycle);

@@ -35,7 +35,9 @@ public class ColorGrid {
     }
 
     public static void setCellColor(int r, int c, Color newColor, int cycle) {
-        // Display cycle text on the graphical centered and big size
+
+
+
         Graphics g = panel.getGraphics();
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, largeur * taillecase, 25);
@@ -44,7 +46,7 @@ public class ColorGrid {
         g.drawString("Cycle: " + cycle, largeur * taillecase / 2 - 50, 20);
 
         if (r < 0 || r >= hauteur || c < 0 || c >= largeur) {
-            throw new RuntimeException("Invalid cell coordinates: (" + r + ", " + c + ")");
+            throw new RuntimeException("coord invalids: (" + r + ", " + c + ")");
         }
 
         Color prevColor = colors[r][c];

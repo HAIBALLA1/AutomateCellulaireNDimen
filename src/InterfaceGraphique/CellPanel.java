@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CellPanel extends JPanel {
+
     private Color[][] colors;
     private int taillecase;
     private int largeur;
@@ -20,7 +21,7 @@ public class CellPanel extends JPanel {
         Graphics g = getGraphics();
         g.setColor(colors[r][c]);
         g.fillRect(c * taillecase, r * taillecase, taillecase, taillecase);
-        g.setColor(Color.BLACK); // Color for the cell border
+        g.setColor(Color.BLACK); // pour la coloration des border
         g.drawRect(c * taillecase, r * taillecase, taillecase, taillecase);
     }
 

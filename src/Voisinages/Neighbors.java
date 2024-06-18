@@ -1,9 +1,13 @@
 package Voisinages;
-import Automate.* ;
+
+import Automate.Cellule;
+import Automate.Grillev2;
+import Automate.TableauDynamiqueND;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public abstract class Neighbors  {
+public abstract class Neighbors {
     protected Cellule G0;
     protected ArrayList<Cellule> neighbors;
     protected ArrayList<ArrayList<Integer>> neighbors_coordinates;
@@ -24,32 +28,31 @@ public abstract class Neighbors  {
         makeNeighbor();
     }
 
-    protected void calculate_coord(int[][] tab) {
-        int index_i = 0;
-        for (int[] T : tab) {
-            ArrayList<Integer> coord = new ArrayList<>(G0.getCoordonnees());
-            neighbors_coordinates.add(coord);
-            int index_j = 0;
-            for (int index : T) {
-                if (index_j < coord.size()) {
-                    int new_coord = coord.get(index_j) + index;
-                    coord.set(index_j, new_coord);
-                } else {
-                    throw new IndexOutOfBoundsException("Index " + index_j + " out of bounds for length " + coord.size());
-                }
-                index_j++;
+    protected ArrayList<Integer> calculate_coord(ArrayList<Integer> coord, int[] offset) {
+        ArrayList<Integer> newCoord = new ArrayList<>(coord);
+        for (int i = 0; i < dimension; i++) {
+            int newValue = newCoord.get(i) + offset[i];
+            if (newValue < 0 || newValue >= grille.getTaille()) {
+                throw new IndexOutOfBoundsException("Index " + newValue + " out of bounds for length " + grille.getTaille());
             }
-            index_i++;
+            newCoord.set(i, newValue);
+        }
+        return newCoord;
+    }
+
+    protected void calculate_coord(int[][] rules) {
+        for (int[] rule : rules) {
+            ArrayList<Integer> newCoord = new ArrayList<>(G0.getCoordonnees());
+            newCoord = calculate_coord(newCoord, rule);
+            neighbors_coordinates.add(newCoord);
         }
     }
 
-        protected boolean verifie_limite(ArrayList<Integer> coord) {
-        int limite = 0;
-        for (Integer i : coord) {
-            if (i < 0 || i >= grille.getDimension().get(limite)) {
+    protected boolean verifie_limite(ArrayList<Integer> coord) {
+        for (int i = 0; i < coord.size(); i++) {
+            if (coord.get(i) < 0 || coord.get(i) >= grille.getDimension().get(i)) {
                 return true;
             }
-            limite++;
         }
         return false;
     }
@@ -87,6 +90,4 @@ public abstract class Neighbors  {
     public void getNeighborsk() {
         neighbors.remove(G0);
     }
-
-
 }
